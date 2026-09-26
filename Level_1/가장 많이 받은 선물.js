@@ -127,3 +127,57 @@ function solution(friends, gifts) {
 // 채점 결과
 // 정확성: 100.0
 // 합계: 100.0 / 100.0
+
+//세번째. (첫번째 내풀이 살려서 문제풀어보기)
+// //첫 시도 -> 실패. 중간로직 꼬임
+// //give + take
+function solution(friends, gifts) {
+  const giftIndex = {};
+  const takenGiftList = {};
+  const nextMonthGifts = {};
+
+  //초기화 (맨처음 0)
+  for (const name of friends) {
+    giftIndex[name] = 0;
+    takenGiftList[name] = [];
+    nextMonthGifts[name] = 0;
+  }
+
+  //선물주고받기 기록
+  for (let i = 0; i < gifts.length; i++) {
+    const [giveMember, takenMember] = gifts[i].split(" ");
+    giftIndex[giveMember]++;
+    giftIndex[takenMember]--;
+    takenGiftList[giveMember].push(takenMember);
+  }
+
+  for (let i = 0; i < friends.length - 1; i++) {
+    const Member1 = friends[i];
+    for (let j = i + 1; j < friends.length; j++) {
+      const Member2 = friends[j];
+      const Member1giveMember2Count = takenGiftList[Member1].filter(
+        (name) => name === Member2,
+      ).length;
+      const Member2giveMember1Count = takenGiftList[Member2].filter(
+        (name) => name === Member1,
+      ).length;
+
+      // 주고받은 기록 있고 횟수 다를때
+      if (Member1giveMember2Count > Member2giveMember1Count) {
+        nextMonthGifts[Member1]++;
+      } else if (Member1giveMember2Count < Member2giveMember1Count) {
+        nextMonthGifts[Member2]++;
+      }
+
+      // 주고받은 수 같거나, 없을때
+      else {
+        if (giftIndex[Member1] > giftIndex[Member2]) {
+          nextMonthGifts[Member1]++;
+        } else if (giftIndex[Member1] < giftIndex[Member2]) {
+          nextMonthGifts[Member2]++;
+        }
+      }
+    }
+  }
+  return Math.max(...Object.values(nextMonthGifts));
+}
