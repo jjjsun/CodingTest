@@ -33,3 +33,5 @@ function solution(want, number, discount) {
   //원하는 상품을 할인가격으로 살수있는 날 카운트 출력
   return result;
 }
+
+//filter함수 메서드 화살표함수 사용
